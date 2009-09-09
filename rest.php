@@ -9,17 +9,17 @@ Author URI: http://goldenspud.com/
 */
 
 // Set this to the prefix of your docutils installation.
-$prefix = "/usr/local";
+$prefix = "/home/dwf/sw";
 
 // Set this to the path of rst2html.py
-$rst2html = "$prefix/bin/rst2html.py";
+$rst2html = "$prefix/bin/rst2html-highlight.py";
 
 // Set this to a directory writeable by your web server to store cache
 // versions of rendered reStructuredText.
-$cachedir = "/tmp/rest_cache";
+$cachedir = "/tmp/dwf_rest_cache";
 
 // Set this to true to use pipes instead of temporary files.
-$usepipes = true;
+$usepipes = false;
 
 // Set this to the location to store temporary files if $usepipes is
 // not set to true.
@@ -145,7 +145,8 @@ function reST($text) {
                               1 => array("pipe", "w"),
                               );
       $execstr = $rst2html . ' ' . $rst2html_options;
-      $process = proc_open($execstr, $descriptorspec, $pipes);
+     	putenv("LD_LIBRARY_PATH=/home/dwf/sw/lib"); 
+	$process = proc_open($execstr, $descriptorspec, $pipes);
       if (!is_resource($process)) {
         return "ERROR";
       }
@@ -165,7 +166,8 @@ function reST($text) {
       $txtfile = fopen($filename, 'w');
       fwrite($txtfile, $text);
       fclose($txtfile);
-      $execstr = $rst2html . ' ' . $rst2html_options . ' ' . $filename;
+      putenv("LD_LIBRARY_PATH=/home/dwf/sw/lib");
+	$execstr = $rst2html . ' ' . $rst2html_options . ' ' . $filename;
       $rst = shell_exec($execstr);
       unlink($filename);
     }
